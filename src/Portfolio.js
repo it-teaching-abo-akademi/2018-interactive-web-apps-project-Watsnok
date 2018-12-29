@@ -16,6 +16,8 @@ class Portfolio extends Component{
         }
     }
 
+    //Takes the key of the Stock and removes it from the list before rerendering the list.
+    //Not working as it should.
     deleteStock = i => {
         let stockscopy = this.state.stocks.slice();
         stockscopy.splice(i, 1);
@@ -23,10 +25,10 @@ class Portfolio extends Component{
         this.setState({stocks: stockscopy});
     }
 
-    updateStockCurrency = e => {
 
-    }
 
+    //Handles click events. The Input is handled and added to the list and is then pushed to the Stocks list.
+    //This list is then rendered in the render method.
     onClick = () => {
         let stockscopy = this.state.stocks.slice();
         let vol = parseInt(this.state.volume);
@@ -64,10 +66,14 @@ class Portfolio extends Component{
         });
     }
 
+    //The value of the stock is calculated by calculating value and exchangerate. The initial value is in USD
+    //Then when the currency reverts back to it's original value it is multiplied with 1. So it reverts to it's
+    //Original value
     changeCurrencyUSD = () => {
         if(this.state.currency === "USD"){
 
         } else {
+
 
             this.setState({
                 exchangerate: 1,
@@ -78,7 +84,8 @@ class Portfolio extends Component{
     }
 
 
-
+    //The exchange rate from USD to Euro is fetched using the API. The result replaces the current state value of exchangerate.
+    //The state value currency is changed depending on which exchange rate is currently given.
     changeCurrencyEuro = () => {
             let api = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=EUR&apikey=10SY946P4XHW29LF";
             //USD to EURO
@@ -113,8 +120,10 @@ class Portfolio extends Component{
         }
 
 
+    //The Portfolio passes along a callback method for the child Stock so it can transfer back the initial value
+    //of the stock. The method is called from within the child and this handler logs the value and sets the newtotal
+    //to be the previous total plus the value from the callback. The Value is only received once.
     handlevalue (e) {
-        console.log(e);
         let newTotal = this.state.total + e;
         this.setState({
             total: newTotal
@@ -126,6 +135,8 @@ class Portfolio extends Component{
 
         let showstocks = this.state.stocks.map((e, i) =>{
             return(
+                //Mapping over each stock in the list and giving the arguments to the child.
+                //GetValue is a callback method handed to the child so it can call back to its parent.
                 <Stock key={i} name={e} getValue={(x) => this.handlevalue(x)} total={this.state.total} exchangerate={this.state.exchangerate} delete={() => this.deleteStock(i)}/>
             );
         });

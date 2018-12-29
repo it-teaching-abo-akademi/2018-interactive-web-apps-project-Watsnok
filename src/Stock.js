@@ -21,6 +21,9 @@ class Stock extends Component{
 
     //API Key: 10SY946P4XHW29LF
 
+    //API is called when Stock is being initialized. The values are then put into the state data.
+    //Also the input is passed down and added to the states value here. This could also be done in a
+    //Get initial state method.
     componentDidMount() {
         let temp = this.props.name;
         let prop = temp.split("-");
@@ -37,9 +40,6 @@ class Stock extends Component{
                         volume: prop[1]
                     });
                 },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
                 (error) => {
                     this.setState({
                         isLoaded: true,
@@ -68,9 +68,8 @@ class Stock extends Component{
 
     }
 
-    //TODO: Alert message when adding above 50 stocks still adds the Stock to the portfolio after erroring.
-
-
+    //Method that checks if the current total is different from the volumeprice.
+    //Used to check if the prices needs to be updated.
     checkTotal = () => {
         let d = new Date();
         let time = (d.getFullYear()+"-"+(d.getMonth()+1)+"-"+(d.getDate()-1)+" 15:00:00");
@@ -78,6 +77,9 @@ class Stock extends Component{
         let unitprice = Math.round((closeprice * this.state.exchangerate) * 100) / 100;
         let volumeprice = Math.round((unitprice * this.state.volume) * 100) / 100;
 
+        //The callback method is only called when the total is still 0. Meaning before being initialized.
+        //The initial value is then sent back to the parent. The value is sent not the states value because of
+        //Asynchronisation.
         if(this.state.total === 0){
             console.log("Immediately")
             this.passTotal(volumeprice);
