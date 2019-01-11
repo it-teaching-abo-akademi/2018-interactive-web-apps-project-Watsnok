@@ -29,6 +29,8 @@ class Stock extends Component{
         let prop = temp.split("-");
         let api = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+prop[0]+"&interval=5min&apikey=10SY946P4XHW29LF";
 
+
+
         fetch(api)
             .then(res => res.json())
             .then(
@@ -72,10 +74,22 @@ class Stock extends Component{
     //Used to check if the prices needs to be updated.
     checkTotal = () => {
         let d = new Date();
-        let time = (d.getFullYear()+"-"+(d.getMonth()+1)+"-"+(d.getDate()-1)+" 15:00:00");
-        let closeprice = parseFloat(this.state.data["Time Series (5min)"][time]["4. close"]).toFixed(2);
+
+        let date= d.getMonth()+1;
+        console.log(date.toString().length);
+        if(date.toString().length === 1){
+            date = "0"+date;
+        }
+
+
+        let time = (d.getFullYear()+"-"+date+"-"+(d.getDate()-1)+" 15:00:00");
+        console.log(time);
+        let closeprice = parseFloat(this.state.data["Time Series (5min)"][time]["1. open"]).toFixed(2);
         let unitprice = Math.round((closeprice * this.state.exchangerate) * 100) / 100;
         let volumeprice = Math.round((unitprice * this.state.volume) * 100) / 100;
+
+
+
 
         //The callback method is only called when the total is still 0. Meaning before being initialized.
         //The initial value is then sent back to the parent. The value is sent not the states value because of
@@ -120,8 +134,18 @@ class Stock extends Component{
         }else{
 
             let d = new Date();
-            let time = (d.getFullYear()+"-"+(d.getMonth()+1)+"-"+(d.getDate()-1)+" 15:00:00");
-            let closeprice = parseFloat(this.state.data["Time Series (5min)"][time]["4. close"]).toFixed(2);
+
+            let date= d.getMonth()+1;
+            console.log(date.toString().length);
+            if(date.toString().length === 1){
+                date = "0"+date;
+            }
+
+            let time = (d.getFullYear()+"-"+date+"-"+((d.getDate()-1)+" 15:00:00"));
+            console.log(time);
+            console.log(this.state.data);
+            let closeprice = parseFloat(this.state.data["Time Series (5min)"][time.toString()]["1. open"]).toFixed(2);
+
             let unitprice = Math.round((closeprice * this.state.exchangerate) * 100) / 100; //closeprice * this.state.exchangerate
             let volumeprice =Math.round((unitprice * this.state.volume) * 100) / 100;  //unitprice * this.state.volume
 
