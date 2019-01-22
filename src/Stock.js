@@ -74,16 +74,27 @@ class Stock extends Component{
     //Used to check if the prices needs to be updated.
     checkTotal = () => {
         let d = new Date();
+        let month= d.getMonth()+1;
+        if(month.toString().length === 1){
+            month = "0"+month;
+        }
 
-        let date= d.getMonth()+1;
-        console.log(date.toString().length);
-        if(date.toString().length === 1){
-            date = "0"+date;
+        let date = d.getDate();
+        let day = d.getDay();
+
+        if(day === 6 || day === 0){
+            if(d.getDay() === 6){
+                day = day - 1;
+                date = date -1;
+            }else{
+                day = day + 1;
+                date = date - 2
+            }
         }
 
 
-        let time = (d.getFullYear()+"-"+date+"-"+(d.getDate()-1)+" 15:00:00");
-        console.log(time);
+        let time = (d.getFullYear()+"-"+month+"-"+(date)+" 09:35:00");
+        console.log(time + "rendertwice");
         let closeprice = parseFloat(this.state.data["Time Series (5min)"][time]["1. open"]).toFixed(2);
         let unitprice = Math.round((closeprice * this.state.exchangerate) * 100) / 100;
         let volumeprice = Math.round((unitprice * this.state.volume) * 100) / 100;
@@ -134,15 +145,31 @@ class Stock extends Component{
         }else{
 
             let d = new Date();
+            let date = d.getDate();
+            let day = d.getDay();
 
-            let date= d.getMonth()+1;
-            console.log(date.toString().length);
-            if(date.toString().length === 1){
-                date = "0"+date;
+            if(day === 6 || day === 0){
+                if(d.getDay() === 6){
+                    day = day - 1;
+                    date = date -1;
+                }else{
+                    day = day + 1;
+                    date = date - 2
+                }
             }
 
-            let time = (d.getFullYear()+"-"+date+"-"+((d.getDate()-1)+" 15:00:00"));
-            console.log(time);
+            let month= d.getMonth()+1;
+            console.log(month.toString().length);
+
+            if(month.toString().length === 1){
+                month = "0"+month;
+
+            }
+
+
+            let time = (d.getFullYear()+"-"+month+"-"+((date)+" 09:35:00"));
+
+            console.log(time + "render");
             console.log(this.state.data);
             let closeprice = parseFloat(this.state.data["Time Series (5min)"][time.toString()]["1. open"]).toFixed(2);
 
